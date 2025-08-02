@@ -1,0 +1,60 @@
+inkspire/
+│
+├── api/                            # Serverless functions (optional or delete if not using)
+│
+├── app/                            # Next.js App Router
+│   ├── (auth)/                     # Public routes (auth-related)
+│   │   ├── login/                  # Login page
+│   │   │   └── page.tsx
+│   │   ├── register/               # Register page
+│   │   │   └── page.tsx
+│   │   └── layout.tsx             # Auth layout (no navbar/footer)
+│   │
+│   ├── dashboard/                  # Protected routes
+│   │   ├── page.tsx
+│   │   └── ...
+│   │
+│   ├── layout.tsx                 # Root layout
+│   ├── page.tsx                   # Landing page (unauthenticated)
+│   └── globals.css                # Global styles
+│
+├── components/                    # Reusable UI components
+│   ├── Header.tsx
+│   ├── Footer.tsx
+│   ├── Input.tsx
+│   ├── Button.tsx
+│   ├── AuthProvider.tsx           # NextAuth SessionProvider wrapper
+│   └── ProtectedRoute.tsx         # Optional wrapper for route protection
+│
+├── constants/                     # Constants and config
+│   ├── routes.ts                  # Route path constants
+│   └── config.ts                  # App config
+│
+├── lib/                           # Utilities and service functions
+│   ├── api.ts                     # Axios base setup
+│   ├── auth.ts                    # Login, logout, fetch session/token
+│   └── helpers.ts                 # General utilities
+│
+├── middleware.ts                  # Edge middleware for route protection
+│
+├── store/                         # Redux (optional, only if using)
+│   ├── store.ts
+│   ├── slices/
+│   │   ├── authSlice.ts
+│   │   └── userSlice.ts
+│   └── hooks.ts
+│
+├── types/                         # Custom TypeScript types
+│   ├── next-auth.d.ts             # Extending NextAuth types (Session, JWT)
+│   └── index.ts
+│
+├── public/                        # Static assets
+│
+├── styles/                        # CSS / SCSS / Tailwind etc.
+│   └── ...
+│
+├── .env.local                     # Environment variables
+├── next.config.js
+├── tsconfig.json
+├── package.json
+└── README.md
