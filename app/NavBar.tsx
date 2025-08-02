@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PiPackageDuotone, PiShoppingCartSimpleDuotone } from "react-icons/pi";
 import { RiMenuFold3Line, RiMenuUnfold3Line } from "react-icons/ri";
 
@@ -21,7 +21,11 @@ const NavBar = () => {
     { label: "About", href: "/about" },
   ];
 
-  console.log("Session: ", session);
+  useEffect(() => {
+    console.log("Session status:", status);
+    console.log("Session data:", session);
+  }, [status, session]);
+
   return (
     <nav
       className={`sticky top-0 z-50 backdrop-blur-md bg-stone-50/80 border-b border-stone-200 ${

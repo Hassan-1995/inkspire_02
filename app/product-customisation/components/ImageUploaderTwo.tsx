@@ -1,7 +1,7 @@
 "use client";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import SingleImageUploader from "../../components/SingleImageUploader";
+import SingleImageUploader from "@/components/SingleImageUploader";
 import {
   setPrimaryImage,
   setSecondaryImage,

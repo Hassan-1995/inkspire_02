@@ -4,6 +4,7 @@ import "./globals.css";
 import NavBar from "./NavBar";
 import AuthProvider from "./AuthProvide";
 import Footer from "./Footer";
+import { StoreProvider } from "./store/StoreProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,14 +32,16 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <nav className="fixed top-0 left-0 w-full z-50">
-            <NavBar />
-          </nav>
-          {/* {children} */}
-          <main className="mt-22">{children}</main>
-          <footer>
-            <Footer />
-          </footer>
+          <StoreProvider>
+            <nav className="fixed top-0 left-0 w-full z-50">
+              <NavBar />
+            </nav>
+            {/* {children} */}
+            <main className="mt-22">{children}</main>
+            <footer>
+              <Footer />
+            </footer>
+          </StoreProvider>
         </AuthProvider>
       </body>
     </html>

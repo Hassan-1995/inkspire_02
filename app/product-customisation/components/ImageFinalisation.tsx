@@ -1,4 +1,4 @@
-import AddToCart from "@/app/components/AddToCart";
+import AddToCart from "@/components/AddToCart";
 import { RootState } from "@/app/store/store";
 import Image from "next/image";
 import React from "react";
