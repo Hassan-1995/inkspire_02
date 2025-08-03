@@ -15,6 +15,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import { checkUserDeliveryInfo } from "@/lib/auth";
+import { useCheckoutStore } from "../store/checkoutStore";
 
 const CartItem = () => {
   const dispatch = useDispatch();
@@ -50,8 +51,10 @@ const CartItem = () => {
         router.push("/delivery-information");
         return;
       }
-      router.push(`/check-out?amount=${getTotalPrice()}`);
-
+      useCheckoutStore.getState().setAmount(getTotalPrice());
+      router.push("/check-out");
+      // router.push(`/check-out?amount=${getTotalPrice()}`);
+      // tempporary solution
       // try {
       //   const res = await fetch("/api/checkout", {
       //     method: "POST",

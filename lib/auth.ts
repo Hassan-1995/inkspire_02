@@ -50,3 +50,14 @@ export const getUserContact = async (token: string) => {
     return null;
   }
 };
+
+// goes to payemnt gateway
+export const initiateCheckout = async (amount: number) => {
+  try {
+    const response = await api.post("/checkout", { amount });
+    return response.data; // { url: "https://..." }
+  } catch (error: any) {
+    console.error("Checkout API error:", error.response?.data || error.message);
+    throw error.response?.data || { error: "Unexpected error" };
+  }
+};

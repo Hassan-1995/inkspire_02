@@ -6,12 +6,17 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PiPackageDuotone, PiShoppingCartSimpleDuotone } from "react-icons/pi";
 import { RiMenuFold3Line, RiMenuUnfold3Line } from "react-icons/ri";
+import { useSelector } from "react-redux";
+import { RootState } from "./store/store";
 
 const NavBar = () => {
   const [modal, setModal] = useState(false);
   const [signOut, setSignOut] = useState(false);
 
   const { status, data: session } = useSession();
+
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const cartHasItems = cartItems.length > 0;
 
   const pathName = usePathname();
   const mainLinks = [
@@ -122,6 +127,9 @@ const NavBar = () => {
                 <PiShoppingCartSimpleDuotone className="text-3xl text-purple-700 transition transform hover:scale-110" />
                 Cart
               </p>
+              {cartHasItems && (
+                <div className="absolute top-0 right-0 bg-red-600 w-3 h-3 rounded-full border border-white" />
+              )}
             </div>
           </Link>
 
@@ -204,6 +212,9 @@ const NavBar = () => {
               <p className="flex flex-col items-end text-pink-600 text-xs ">
                 <PiShoppingCartSimpleDuotone className="text-2xl text-purple-700 transition transform hover:scale-110" />
               </p>
+              {cartHasItems && (
+                <div className="absolute top-0 right-0 bg-red-600 w-2 h-2 rounded-full border border-white" />
+              )}
             </div>
           </Link>
         </div>
