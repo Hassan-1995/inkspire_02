@@ -52,7 +52,8 @@ const CartItem = () => {
         return;
       }
       useCheckoutStore.getState().setAmount(getTotalPrice());
-      router.push("/check-out");
+      // router.push("/check-out");
+      router.push("/confirmation");
       // router.push(`/check-out?amount=${getTotalPrice()}`);
       // tempporary solution
       // try {

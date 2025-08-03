@@ -140,7 +140,7 @@ const DeliveryInformation = () => {
 
             <button
               onClick={handleSave}
-              className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-purple-700 transition"
+              className="cursor-pointer w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:scale-105 active:scale-95 transition px-6 shadow-xl"
               disabled={loading || !address || !contactNumber}
             >
               {loading ? "Please Wait..." : "Save Information"}
