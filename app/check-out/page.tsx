@@ -1,20 +1,66 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCheckoutStore } from "../store/checkoutStore";
-import { initiateCheckout } from "@/lib/auth";
+import { getUserContact, initiateCheckout } from "@/lib/auth";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { useSession } from "next-auth/react";
 
 const CheckoutPage = () => {
   // const totalAmount = Number(searchParams.amount) || 0;
   const { amount } = useCheckoutStore();
+  const { data: session } = useSession();
+  const token = useMemo(() => session?.user?.accessToken, [session]);
+  const [address, setAddress] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+
   const [paymentMethod, setPaymentMethod] = useState<"Card" | "COD">("Card");
 
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      if (!token) return;
+      try {
+        const data = await getUserContact(token);
+        setAddress(data?.physicalAddress ?? "");
+        setContactNumber(data?.contactNumber ?? "");
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+    fetchUserInfo();
+  }, [token]);
+
+  const generateOrderID = () => {
+    return (
+      "ORD" +
+      Date.now().toString(36) +
+      Math.random().toString(36).substring(2, 5).toUpperCase()
+    );
+  };
+
   const handleConfirm = async (pm: string) => {
+    const orderID = generateOrderID();
+    const updatedCartData = cartItems.map((item) => ({
+      ...item,
+      orderID: orderID,
+      status: "Pending",
+      payment: pm,
+      paymentStatus: pm === "Card" ? "Unpaid" : "COD",
+      deliveryDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000),
+      userID: session?.user.id,
+      userEmail: session?.user.email,
+      userContact: contactNumber,
+      userAddress: address,
+    }));
     switch (pm) {
       case "Card":
         try {
-          const data = await initiateCheckout(amount!);
-          window.location.href = data.url;
+          console.log(updatedCartData);
+          // const data = await initiateCheckout(amount!);
+          // window.location.href = data.url;
         } catch (error: any) {
           alert(`Error: ${error.error}`);
         }
