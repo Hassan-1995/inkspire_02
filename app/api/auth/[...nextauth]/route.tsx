@@ -57,17 +57,54 @@ export const authOptions: AuthOptions = {
   ],
 
   callbacks: {
-    session: ({ session, token }) => {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.id as string,
-          accessToken: token.accessToken as string,
-        },
-      };
+    // session: ({ session, token }) => {
+    //   return {
+    //     ...session,
+    //     user: {
+    //       ...session.user,
+    //       id: token.id as string,
+    //       accessToken: token.accessToken as string,
+    //     },
+    //   };
+    // },
+    // jwt: ({ user, token }) => {
+    //   if (user) {
+    //     return {
+    //       ...token,
+    //       id: user.id,
+    //       accessToken: (user as any).accessToken,
+    //     };
+    //   }
+    //   return token;
+    // },
+
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        try {
+          // Call your backend to sync/create user & get JWT token
+          const response = await axios.post(
+            // `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google-login`,
+            `http://localhost:5000/auth/google-login`,
+            {
+              email: user.email,
+              name: user.name,
+            }
+          );
+
+          // Attach token and user info to the user object
+          (user as any).accessToken = response.data.accessToken;
+          user.id = response.data.id;
+          user.image = response.data.image || null;
+        } catch (error) {
+          console.error("Error syncing Google user:", error);
+          return false; // fail sign-in if backend sync/token fails
+        }
+      }
+      return true;
     },
-    jwt: ({ user, token }) => {
+
+    // jwt and session callbacks as you already have
+    jwt({ user, token }) {
       if (user) {
         return {
           ...token,
@@ -76,6 +113,17 @@ export const authOptions: AuthOptions = {
         };
       }
       return token;
+    },
+
+    session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+          accessToken: token.accessToken,
+        },
+      };
     },
   },
   session: {

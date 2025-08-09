@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
 const colorTheme = "purple";
 
@@ -81,11 +82,11 @@ const Register = () => {
         <div className="mb-6">
           <button
             className="cursor-pointer w-full flex items-center justify-center gap-3 h-12 bg-white text-slate-700 border border-gray-300 rounded-lg shadow-sm hover:shadow-md hover:bg-gray-50 transition"
-            // onClick={() =>
-            //   signIn("google", {
-            //     callbackUrl: "/",
-            //   })
-            // }
+            onClick={() =>
+              signIn("google", {
+                callbackUrl: "/",
+              })
+            }
           >
             <FcGoogle className="text-xl" />
             <span className="text-sm font-medium">Continue with Google</span>
