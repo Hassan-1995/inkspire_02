@@ -1,0 +1,56 @@
+-- CREATE DATABASE inkspire_db;
+-- ALTER TABLE user 
+-- ADD COLUMN authProvider ENUM('local', 'google', 'facebook') DEFAULT 'local' AFTER email;
+
+-- CREATE TABLE user (
+--     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL,
+--     email VARCHAR(255) NOT NULL UNIQUE,
+--     passwordHash VARCHAR(255) NOT NULL,
+--     physicalAddress VARCHAR(255),      -- nullable, can be added later
+--     contactNumber VARCHAR(50),         -- nullable, can be added later
+--     image VARCHAR(255),                -- nullable
+--     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- );
+
+
+-- CREATE TABLE orderedItems (
+--   id INT AUTO_INCREMENT PRIMARY KEY,
+
+  -- Order Info
+--   orderID VARCHAR(50),
+--   status ENUM('Pending', 'Confirmed', 'Delivered') DEFAULT 'Pending',
+--   payment ENUM('Card', 'Cash') DEFAULT 'Card',
+--   paymentStatus ENUM('Paid', 'Unpaid', 'Refunded') DEFAULT 'Unpaid',
+--   deliveryDate DATE,
+
+--   -- User Info
+--   userID INT NOT NULL,
+--   userEmail VARCHAR(100),
+--   userContact VARCHAR(30),
+--   userAddress VARCHAR(255),
+
+--   -- Product Info
+--   productID VARCHAR(100) NOT NULL,
+--   productName VARCHAR(100),
+--   productPrice DECIMAL(10, 2),
+--   productColor VARCHAR(50),
+--   productSize VARCHAR(50),
+--   quantity INT DEFAULT 1,
+
+--   -- Image & Design Info
+--   primaryImageSize VARCHAR(50),
+--   secondaryImageSize VARCHAR(50),
+--   productFrontPath VARCHAR(255),
+--   productBackPath VARCHAR(255),
+--   uploadedImagePrimary TEXT,
+--   uploadedImageSecondary TEXT,
+
+--   -- Timestamps
+--   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+--   -- Foreign Key
+--   CONSTRAINT fk_user FOREIGN KEY (userID) REFERENCES user(id) ON DELETE CASCADE
+-- );

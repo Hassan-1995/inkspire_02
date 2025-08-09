@@ -61,3 +61,56 @@ export const initiateCheckout = async (amount: number) => {
     throw error.response?.data || { error: "Unexpected error" };
   }
 };
+
+// create order
+export const createOrder = async (orderedItems: any[], token: string) => {
+  try {
+    if (!Array.isArray(orderedItems) || orderedItems.length === 0) {
+      throw { error: "Invalid order data: must be a non-empty array" };
+    }
+
+    if (!token) {
+      throw { error: "Unauthorized: No token found" };
+    }
+
+    const response = await api.post(
+      "/orders/create",
+      orderedItems, // Send array directly
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Pass token from session
+        },
+      }
+    );
+
+    return response.data; // { message: "Orders saved successfully" }
+  } catch (error: any) {
+    console.error(
+      "Create Order API error:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || { error: "Unexpected error" };
+  }
+};
+
+export const getOrdersByUserID = async (token: string) => {
+  try {
+    if (!token) {
+      throw { error: "Unauthorized: No token found" };
+    }
+
+    const response = await api.get("/orders/user", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data; // should be the array of orders
+  } catch (error: any) {
+    console.error(
+      "Get Orders By User ID API error:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || { error: "Unexpected error" };
+  }
+};

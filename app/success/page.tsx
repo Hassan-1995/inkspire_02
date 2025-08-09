@@ -104,12 +104,11 @@ const SuccessPaymentPage = () => {
             d="M5 13l4 4L19 7"
           />
         </svg>
-        <h1 className="text-2xl font-bold text-green-600 mb-2">
+        <h1 className="text-2xl text-center font-bold text-green-600 mb-2">
           Order has been placed successfully!
         </h1>
         <p className="text-pink-700 mb-4 text-center">
-          Thank you for your purchase. Your payment has been processed
-          successfully.
+          Thank you for your purchase.
         </p>
         <Link
           className="px-6 py-2 font-semibold bg-gradient-to-r from-green-700 to-green-900 text-white rounded hover:bg-green-600 transition"

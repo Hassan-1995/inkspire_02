@@ -1,8 +1,9 @@
 import React from "react";
-import CartItem from "./CartItem";
+// import CartItem from "./CartItem";
 import Image from "next/image";
+import OrderItem from "./OrderItem";
 
-const CartPage = () => {
+const OrderPage = () => {
   return (
     <div>
       <section className=" text-white py-5 text-center">
@@ -21,9 +22,10 @@ const CartPage = () => {
           Almost there, let&apos;s complete your order.
         </p>
       </section>
-      <CartItem />
+      <OrderItem />
+      {/* <CartItem /> */}
     </div>
   );
 };
 
-export default CartPage;
+export default OrderPage;

@@ -2,10 +2,11 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { useCheckoutStore } from "../store/checkoutStore";
-import { getUserContact, initiateCheckout } from "@/lib/auth";
+import { createOrder, getUserContact, initiateCheckout } from "@/lib/auth";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const CheckoutPage = () => {
   // const totalAmount = Number(searchParams.amount) || 0;
@@ -14,7 +15,9 @@ const CheckoutPage = () => {
   const token = useMemo(() => session?.user?.accessToken, [session]);
   const [address, setAddress] = useState("");
   const [contactNumber, setContactNumber] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState<"Card" | "COD">("Card");
 
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -42,36 +45,46 @@ const CheckoutPage = () => {
   };
 
   const handleConfirm = async (pm: string) => {
+    if (isSubmitting) return; // 🚫 prevent double click
+
+    setIsSubmitting(true); // ⏳ lock button
     const orderID = generateOrderID();
+
     const updatedCartData = cartItems.map((item) => ({
       ...item,
       orderID: orderID,
       status: "Pending",
-      payment: pm,
-      paymentStatus: pm === "Card" ? "Unpaid" : "COD",
-      deliveryDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000),
+      payment: pm === "Card" ? "Card" : "Cash",
+      paymentStatus: "Unpaid",
+      deliveryDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       userID: session?.user.id,
       userEmail: session?.user.email,
       userContact: contactNumber,
       userAddress: address,
     }));
-    switch (pm) {
-      case "Card":
-        try {
+
+    try {
+      switch (pm) {
+        case "Card":
           console.log(updatedCartData);
-          // const data = await initiateCheckout(amount!);
-          // window.location.href = data.url;
-        } catch (error: any) {
-          alert(`Error: ${error.error}`);
-        }
-        break;
+          await createOrder(updatedCartData, token!);
+          const data = await initiateCheckout(amount!);
+          localStorage.setItem("DATA", data.status);
+          window.location.href = data.url;
+          break;
 
-      case "COD":
-        alert("Order placed with Cash on Delivery!");
-        break;
-
-      default:
-        break;
+        case "COD":
+          const responseCash = await createOrder(updatedCartData, token!);
+          alert(responseCash.message);
+          router.push("./success");
+          break;
+      }
+    } catch (error: any) {
+      alert(`Order creation failed: ${error.error || error.message}`);
+    } finally {
+      setIsSubmitting(false); // ✅ unlock button after done
     }
   };
 
@@ -141,9 +154,19 @@ const CheckoutPage = () => {
         {/* Confirm Button */}
         <button
           onClick={() => handleConfirm(paymentMethod)}
-          className={`w-full cursor-pointer flex items-center justify-center py-3 px-6 rounded-lg font-semibold transition-transform duration-200 ease-out bg-white border border-pink-600 text-pink-700 shadow-md hover:scale-105 hover:bg-pink-600 hover:text-white hover:border-pink-700 hover:shadow-xl active:scale-95 active:bg-purple-800 active:text-white`}
+          disabled={isSubmitting}
+          className={`w-full cursor-pointer flex items-center justify-center py-3 px-6 rounded-lg font-semibold transition-transform duration-200 ease-out 
+    ${
+      isSubmitting
+        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+        : "bg-white border border-pink-600 text-pink-700 shadow-md hover:scale-105 hover:bg-pink-600 hover:text-white"
+    }
+  `}
+          // className={`w-full cursor-pointer flex items-center justify-center py-3 px-6 rounded-lg font-semibold transition-transform duration-200 ease-out bg-white border border-pink-600 text-pink-700 shadow-md hover:scale-105 hover:bg-pink-600 hover:text-white hover:border-pink-700 hover:shadow-xl active:scale-95 active:bg-purple-800 active:text-white`}
         >
-          Confirm Order
+          {isSubmitting ? "Processing..." : "Confirm Order"}
+
+          {/* Confirm Order */}
         </button>
       </div>
     </div>

@@ -41,7 +41,7 @@ const FilterButton = () => {
           <button
             key={category.id}
             onClick={() => setActiveCategory(category.id)}
-            className={`cursor-pointer rounded-full flex w-max items-center px-6 py-2 font-medium transition-all duration-300 border mb-1 ${
+            className={`cursor-pointer rounded-lg flex w-max items-center px-6 py-2 font-medium transition-all duration-300 border mb-1 ${
               activeCategory === category.id
                 ? "bg-purple-600 hover:bg-purple-700 text-white shadow-lg"
                 : "border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent"
