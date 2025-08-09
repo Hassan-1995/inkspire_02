@@ -125,7 +125,7 @@ const CheckoutPage = () => {
         {/* Payment Method Selection */}
         <div className="space-y-4">
           <p className="text-center text-sm text-gray-600">
-            Select Payment Method
+            Mode of Payment
           </p>
           <div className="flex justify-center space-x-4">
             <button
@@ -138,7 +138,7 @@ const CheckoutPage = () => {
             >
               💳 Card
             </button>
-            <button
+            {/* <button
               onClick={() => setPaymentMethod("COD")}
               className={`cursor-pointer px-5 py-2 rounded-lg font-semibold transition shadow ${
                 paymentMethod === "COD"
@@ -147,7 +147,7 @@ const CheckoutPage = () => {
               }`}
             >
               🪙 CoD
-            </button>
+            </button> */}
           </div>
         </div>
 

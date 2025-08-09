@@ -21,6 +21,9 @@ type CartItem = {
 const SuccessPaymentPage = () => {
   const { status, data: session } = useSession();
 
+  localStorage.removeItem('cartData');
+
+
   const hasRun = useRef(false);
   const handleOrder = async () => {
     try {
