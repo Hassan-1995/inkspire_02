@@ -1,7 +1,6 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
 import { loginUser, loginWithGoogle } from "@/lib/auth";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -59,8 +58,12 @@ const Login = () => {
       } else {
         alert("Invalid credentials");
       }
-    } catch (err) {
-      alert("Login failed. Please try again.");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error("Error checking user info:", error);
+      }
     }
 
     reset();

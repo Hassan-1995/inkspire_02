@@ -260,7 +260,11 @@ const NavBar = () => {
               </Link> */}
               <button
                 // href={"/api/auth/signout"}
-                onClick={logout}
+                // onClick={logout}
+                onClick={() => {
+                  setSignOut(false);
+                  logout();
+                }}
                 className="bg-rose-100 text-rose-600 px-5 py-2 rounded-lg hover:bg-rose-200 transition-colors duration-200"
               >
                 Yes

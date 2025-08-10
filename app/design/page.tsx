@@ -3,18 +3,17 @@ import DesignItYourWay from "./DesignItYourWay";
 import HeroSection from "./HeroSection";
 import TipsResources from "./TipsResources";
 
-interface DesignPageProps {
+const DesignPage = async ({
+  searchParams,
+}: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-const DesignPage = async ({ searchParams }: DesignPageProps) => {
-  const resolvedParams = await searchParams;
-
+}) => {
+  const params = await searchParams;
   return (
     <div className="min-h-screen bg-white">
       <HeroSection />
       {/* <DesignGallery searchParams={searchParams} /> */}
-      <DesignGallery searchParams={resolvedParams} />
+      <DesignGallery searchParams={params} />
       <DesignItYourWay />
       <TipsResources />
     </div>

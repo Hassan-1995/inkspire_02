@@ -1,4 +1,33 @@
-// // app/google-success/page.tsx  (App Router)
+// // // app/google-success/page.tsx  (App Router)
+// // "use client";
+
+// // import { useSearchParams, useRouter } from "next/navigation";
+// // import { useEffect } from "react";
+// // import { useAuth } from "@/context/AuthContext";
+
+// // export default function GoogleSuccessPage() {
+// //   const searchParams = useSearchParams();
+// //   const router = useRouter();
+// //   const { login } = useAuth();
+
+// //   useEffect(() => {
+// //     const token = searchParams.get("token");
+// //     const userParam = searchParams.get("user");
+
+// //     if (token && userParam) {
+// //       try {
+// //         const user = JSON.parse(decodeURIComponent(userParam));
+// //         login(user, token);
+// //         router.push("/"); // redirect to home
+// //       } catch (err) {
+// //         console.error("Invalid user data", err);
+// //       }
+// //     }
+// //   }, [searchParams, login, router]);
+
+// //   return <p>Logging you in...</p>;
+// // }
+
 // "use client";
 
 // import { useSearchParams, useRouter } from "next/navigation";
@@ -18,9 +47,9 @@
 //       try {
 //         const user = JSON.parse(decodeURIComponent(userParam));
 //         login(user, token);
-//         router.push("/"); // redirect to home
+//         router.push("/"); // Redirect to home or dashboard
 //       } catch (err) {
-//         console.error("Invalid user data", err);
+//         console.error("Error parsing user data", err);
 //       }
 //     }
 //   }, [searchParams, login, router]);
@@ -30,11 +59,11 @@
 
 "use client";
 
+import React, { Suspense, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 
-export default function GoogleSuccessPage() {
+function GoogleSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { login } = useAuth();
@@ -47,7 +76,7 @@ export default function GoogleSuccessPage() {
       try {
         const user = JSON.parse(decodeURIComponent(userParam));
         login(user, token);
-        router.push("/"); // Redirect to home or dashboard
+        router.push("/");
       } catch (err) {
         console.error("Error parsing user data", err);
       }
@@ -55,4 +84,12 @@ export default function GoogleSuccessPage() {
   }, [searchParams, login, router]);
 
   return <p>Logging you in...</p>;
+}
+
+export default function GoogleSuccessPage() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <GoogleSuccessContent />
+    </Suspense>
+  );
 }

@@ -2,11 +2,17 @@ import { LuCamera } from "react-icons/lu";
 import FilterButton from "./FilterButton";
 import GalleryCard from "./GalleryCard";
 
-interface GalleryPageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
+// interface GalleryPageProps {
+//   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+// }
 
-const GalleryPage = async ({ searchParams }: GalleryPageProps) => {
+export const dynamic = "force-dynamic";
+
+const GalleryPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
   // const activeCategory =
   //   typeof searchParams.category === "string" ? searchParams.category : "all";
   const resolvedParams = await searchParams;
