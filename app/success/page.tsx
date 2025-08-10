@@ -1,9 +1,11 @@
 "use client";
-import { Session } from "next-auth";
+// import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { clearCart } from "../store/slices/cartSlice";
 
 type CartItem = {
   productID: string;
@@ -21,9 +23,7 @@ type CartItem = {
 const SuccessPaymentPage = () => {
   const { status, data: session } = useSession();
 
-  localStorage.removeItem('cartData');
-
-
+  const dispatch = useDispatch();
   const hasRun = useRef(false);
   const handleOrder = async () => {
     try {
@@ -75,6 +75,11 @@ const SuccessPaymentPage = () => {
       console.error("❌ handleOrder error:", error);
     }
   };
+
+  useEffect(() => {
+    localStorage.removeItem("cartData"); // Optional since clearCart also updates storage
+    dispatch(clearCart());
+  }, [dispatch]);
 
   useEffect(() => {
     if (!hasRun.current && status === "authenticated" && session?.user) {

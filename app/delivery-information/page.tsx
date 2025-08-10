@@ -58,16 +58,30 @@ const DeliveryInformation = () => {
       await updateUserContact({ address, contact: contactNumber }, token);
       alert("Delivery information saved successfully!");
       router.push("/cart");
-    } catch (error: any) {
-      console.error("Error saving delivery info:", error);
-      alert(
-        error?.response?.data?.message ||
-          "Failed to save delivery information. Please try again."
-      );
+    } catch (error) {
+      // catch (error: any) {
+      //   console.error("Error saving delivery info:", error);
+      //   alert(
+      //     error?.response?.data?.message ||
+      //       "Failed to save delivery information. Please try again."
+      //   );
+      // }
+      // error is unknown, so narrow its type before using it
+      if (error instanceof Error) {
+        alert(`Error saving delivery info:: ${error.message}`);
+      } else {
+        alert(
+          `Failed to save delivery information. Please try again: ${String(
+            error
+          )}`
+        );
+      }
     } finally {
       setLoading(false);
     }
   };
+
+  console.log("Session Delivery-infio: ", session);
 
   return (
     <div className="w-full min-h-screen pb-20">

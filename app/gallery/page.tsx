@@ -3,12 +3,17 @@ import FilterButton from "./FilterButton";
 import GalleryCard from "./GalleryCard";
 
 interface GalleryPageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-const GalleryPage = ({ searchParams }: GalleryPageProps) => {
+const GalleryPage = async ({ searchParams }: GalleryPageProps) => {
+  // const activeCategory =
+  //   typeof searchParams.category === "string" ? searchParams.category : "all";
+  const resolvedParams = await searchParams;
   const activeCategory =
-    typeof searchParams.category === "string" ? searchParams.category : "all";
+    typeof resolvedParams.category === "string"
+      ? resolvedParams.category
+      : "all";
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-orange-50 to-emerald-50">
       <section className="relative overflow-hidden py-20 px-4 md:px-6">

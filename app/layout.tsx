@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "./NavBar";
 import AuthProvider from "./AuthProvide";
+// import AuthProvider from "./";
 import Footer from "./Footer";
 import { StoreProvider } from "./store/StoreProvider";
 

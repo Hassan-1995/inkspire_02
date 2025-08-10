@@ -8,6 +8,7 @@ import { PiPackageDuotone, PiShoppingCartSimpleDuotone } from "react-icons/pi";
 import { RiMenuFold3Line, RiMenuUnfold3Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
+import { getOrdersByUserID } from "@/lib/auth";
 
 const NavBar = () => {
   const [modal, setModal] = useState(false);
@@ -15,8 +16,11 @@ const NavBar = () => {
 
   const { status, data: session } = useSession();
 
+  const token = session?.user.accessToken;
+
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const cartHasItems = cartItems.length > 0;
+  const [orderHasItems, setOrderHasItems] = useState<number | null>(null);
 
   const pathName = usePathname();
   const mainLinks = [
@@ -25,6 +29,22 @@ const NavBar = () => {
     { label: "Gallery", href: "/gallery" },
     { label: "About", href: "/about" },
   ];
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const data = await getOrdersByUserID(token!);
+        setOrderHasItems(data.length); // could be 0 or more
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+        setOrderHasItems(null);
+      }
+    };
+
+    if (status === "authenticated") {
+      fetchOrders();
+    }
+  }, [status, token]);
 
   useEffect(() => {
     console.log("Session status:", status);
@@ -118,6 +138,9 @@ const NavBar = () => {
                 <PiPackageDuotone className="text-3xl text-purple-700 transition transform hover:scale-110" />
                 Orders
               </p>
+              {orderHasItems !== null && orderHasItems > 0 && (
+                <div className="absolute top-0 right-0 bg-red-600 w-3 h-3 rounded-full border border-white" />
+              )}
             </div>
           </Link>
           {/* cart */}
@@ -173,7 +196,7 @@ const NavBar = () => {
           {/* Sign In Button */}
           {status === "unauthenticated" && (
             <Link
-              href={"/api/auth/signin"}
+              href={"/login"}
               className="w-full text-center py-2 px-4 rounded-lg font-bold transition transform hover:scale-105 active:scale-95 shadow-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white"
             >
               Sign In
@@ -193,7 +216,7 @@ const NavBar = () => {
 
           {/* Order Icon Button */}
           <Link
-            href="/cart"
+            href="/order"
             className="flex items-center justify-center text-purple-700 font-semibold border border-purple-300 rounded-lg py-2 px-4 hover:bg-purple-100 transition"
           >
             <div className="relative">

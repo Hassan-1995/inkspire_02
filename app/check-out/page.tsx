@@ -2,7 +2,12 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { useCheckoutStore } from "../store/checkoutStore";
-import { createOrder, getUserContact, initiateCheckout } from "@/lib/auth";
+import {
+  createOrder,
+  getUserContact,
+  initiateCheckout,
+  OrderedItems,
+} from "@/lib/auth";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { useSession } from "next-auth/react";
@@ -50,7 +55,7 @@ const CheckoutPage = () => {
     setIsSubmitting(true); // ⏳ lock button
     const orderID = generateOrderID();
 
-    const updatedCartData = cartItems.map((item) => ({
+    const updatedCartData: OrderedItems[] = cartItems.map((item) => ({
       ...item,
       orderID: orderID,
       status: "Pending",
@@ -59,7 +64,7 @@ const CheckoutPage = () => {
       deliveryDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000)
         .toISOString()
         .split("T")[0],
-      userID: session?.user.id,
+      userID: Number(session?.user.id),
       userEmail: session?.user.email,
       userContact: contactNumber,
       userAddress: address,
@@ -68,7 +73,7 @@ const CheckoutPage = () => {
     try {
       switch (pm) {
         case "Card":
-          console.log(updatedCartData);
+          console.log("Updated:", updatedCartData);
           await createOrder(updatedCartData, token!);
           const data = await initiateCheckout(amount!);
           localStorage.setItem("DATA", data.status);
@@ -81,8 +86,13 @@ const CheckoutPage = () => {
           router.push("./success");
           break;
       }
-    } catch (error: any) {
-      alert(`Order creation failed: ${error.error || error.message}`);
+    } catch (error) {
+      // error is unknown, so narrow its type before using it
+      if (error instanceof Error) {
+        alert(`Order creation failed: ${error.message}`);
+      } else {
+        alert(`Order creation failed: ${String(error)}`);
+      }
     } finally {
       setIsSubmitting(false); // ✅ unlock button after done
     }
@@ -124,9 +134,7 @@ const CheckoutPage = () => {
 
         {/* Payment Method Selection */}
         <div className="space-y-4">
-          <p className="text-center text-sm text-gray-600">
-            Mode of Payment
-          </p>
+          <p className="text-center text-sm text-gray-600">Mode of Payment</p>
           <div className="flex justify-center space-x-4">
             <button
               onClick={() => setPaymentMethod("Card")}

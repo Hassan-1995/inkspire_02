@@ -1,6 +1,38 @@
 // lib/auth.ts
 import api from "./api";
 
+
+export type OrderedItems = {
+  id?: number;
+  orderID?: string | null;
+  status?: "Pending" | "Confirmed" | "Delivered" | "Cancelled";
+  payment?: "Card" | "Cash";
+  paymentStatus?: "Paid" | "Unpaid" | "Refunded";
+  deliveryDate?: string | null; // ISO date string e.g., "2025-08-10"
+
+  userID: number;
+  userEmail?: string | null;
+  userContact?: string | null;
+  userAddress?: string | null;
+
+  productID: string;
+  productName?: string | null;
+  productPrice?: number | null;
+  productColor?: string | null;
+  productSize?: string | null;
+  quantity?: number;
+  primaryImageSize?: string | null;
+  secondaryImageSize?: string | null;
+  productFrontPath?: string | null;
+  productBackPath?: string | null;
+  uploadedImagePrimary?: string | null;
+  uploadedImageSecondary?: string | null;
+
+  created_at?: string; // ISO timestamp
+  updated_at?: string; // ISO timestamp
+}
+
+
 export const registerUser = async (data: {
   name: string;
   email: string;
@@ -31,10 +63,20 @@ export const checkUserDeliveryInfo = async (token: string) => {
     });
 
     return response.data.hasDeliveryInfo; // true or false
-  } catch (error: any) {
-    console.error("Error checking delivery info:", error.response?.data || error.message);
-    return false;
+  } 
+  
+  catch(error){
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error("Error checking delivery info:", error);
+    }
   }
+  // catch (error: any) {
+  //   console.error("Error checking delivery info:", error.response?.data || error.message);
+  //   return false;
+  // }
+  
 };
 // get user address if exist
 export const getUserContact = async (token: string) => {
@@ -56,14 +98,23 @@ export const initiateCheckout = async (amount: number) => {
   try {
     const response = await api.post("/checkout", { amount });
     return response.data; // { url: "https://..." }
-  } catch (error: any) {
-    console.error("Checkout API error:", error.response?.data || error.message);
-    throw error.response?.data || { error: "Unexpected error" };
+  } 
+  
+  catch(error){
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error("Checkout API error:", error);
+    }
   }
+  // catch (error: any) {
+  //   console.error("Checkout API error:", error.response?.data || error.message);
+  //   throw error.response?.data || { error: "Unexpected error" };
+  // }
 };
 
 // create order
-export const createOrder = async (orderedItems: any[], token: string) => {
+export const createOrder = async (orderedItems: OrderedItems[], token: string) => {
   try {
     if (!Array.isArray(orderedItems) || orderedItems.length === 0) {
       throw { error: "Invalid order data: must be a non-empty array" };
@@ -84,13 +135,22 @@ export const createOrder = async (orderedItems: any[], token: string) => {
     );
 
     return response.data; // { message: "Orders saved successfully" }
-  } catch (error: any) {
-    console.error(
-      "Create Order API error:",
-      error.response?.data || error.message
-    );
-    throw error.response?.data || { error: "Unexpected error" };
+  } 
+  
+  catch(error){
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error("Create Order API error:", error);
+    }
   }
+  // catch (error: any) {
+  //   console.error(
+  //     "Create Order API error:",
+  //     error.response?.data || error.message
+  //   );
+  //   throw error.response?.data || { error: "Unexpected error" };
+  // }
 };
 
 export const getOrdersByUserID = async (token: string) => {
@@ -106,11 +166,14 @@ export const getOrdersByUserID = async (token: string) => {
     });
 
     return response.data; // should be the array of orders
-  } catch (error: any) {
-    console.error(
-      "Get Orders By User ID API error:",
-      error.response?.data || error.message
-    );
-    throw error.response?.data || { error: "Unexpected error" };
+  } 
+  
+  catch(error){
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error("Get Orders By User ID API error:", error);
+    }
   }
+  
 };

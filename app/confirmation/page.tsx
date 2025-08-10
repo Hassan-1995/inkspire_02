@@ -1,17 +1,15 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { getUserContact } from "@/lib/auth";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { LuDollarSign, LuMapPin, LuPhone, LuUser } from "react-icons/lu";
 import { useCheckoutStore } from "../store/checkoutStore";
-import { useSession } from "next-auth/react";
-import { getUserContact } from "@/lib/auth";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 const ConfirmationPage = () => {
   const { amount } = useCheckoutStore();
   const { status, data: session } = useSession();
   const token = useMemo(() => session?.user?.accessToken, [session]);
-  const router = useRouter();
 
   const [address, setAddress] = useState("");
   const [contactNumber, setContactNumber] = useState("");
