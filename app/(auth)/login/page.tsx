@@ -1,4 +1,5 @@
 "use client";
+import { loginWithGoogle } from "@/lib/auth";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -67,11 +68,13 @@ const Login = () => {
         {/* Google Sign-In Button */}
         <div className="mb-6">
           <button
-            onClick={() =>
-              signIn("google", {
-                callbackUrl: "/",
-              })
-            }
+            // onClick={() =>
+            //   signIn("google", {
+            //     callbackUrl: "/",
+            //   })
+            // }
+
+            onClick={loginWithGoogle}
             className="cursor-pointer w-full flex items-center justify-center gap-3 h-12 bg-white text-slate-700 border border-gray-300 rounded-lg shadow-sm hover:shadow-md hover:bg-gray-50 transition"
           >
             <FcGoogle className="text-xl" />

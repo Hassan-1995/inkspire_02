@@ -40,6 +40,11 @@ export const registerUser = async (data: {
 }) => {
   return await api.post("/user", data);
 };
+
+export const loginWithGoogle = async()=>{
+    window.location.href = `http://localhost:5000/api/auth/google`;
+};
+
 // 
 // update address and contanct information
 export const updateUserContact = async (
