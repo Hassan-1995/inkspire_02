@@ -1,5 +1,4 @@
 "use client";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,14 +8,13 @@ import { RiMenuFold3Line, RiMenuUnfold3Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import { getOrdersByUserID } from "@/lib/auth";
+import { useAuth } from "@/context/AuthContext";
 
 const NavBar = () => {
   const [modal, setModal] = useState(false);
   const [signOut, setSignOut] = useState(false);
 
-  const { status, data: session } = useSession();
-
-  const token = session?.user.accessToken;
+  const { user, token, logout, status } = useAuth();
 
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const cartHasItems = cartItems.length > 0;
@@ -41,15 +39,15 @@ const NavBar = () => {
       }
     };
 
-    if (status === "authenticated") {
+    if (token) {
       fetchOrders();
     }
-  }, [status, token]);
+  }, [token]);
 
-  useEffect(() => {
-    console.log("Session status:", status);
-    console.log("Session data:", session);
-  }, [status, session]);
+  // useEffect(() => {
+  //   console.log("Session status:", status);
+  //   console.log("Session data:", session);
+  // }, [status, session]);
 
   return (
     <nav
@@ -111,17 +109,17 @@ const NavBar = () => {
               onClick={() => setSignOut(true)}
               className="hidden md:flex cursor-pointer"
             >
-              {session.user?.image ? (
+              {user?.image ? (
                 <Image
-                  src={session.user.image}
-                  alt={session.user.name || "User"}
+                  src={user.image}
+                  alt={user.name || "User"}
                   width={50}
                   height={50}
                   className="rounded-xl object-cover"
                 />
               ) : (
                 <div className="w-[50px] h-[50px] rounded-xl bg-pink-600 flex items-center justify-center text-white font-bold text-lg">
-                  {session.user?.name
+                  {user?.name
                     ?.split(" ")
                     .map((n) => n[0])
                     .join("")
@@ -193,6 +191,9 @@ const NavBar = () => {
           ))}
         </ul>
         <div className="flex items-center justify-between px-2 gap-2">
+          {status === "loading" && (
+            <div className="text-stone-700 animate-pulse">Loading...</div>
+          )}
           {/* Sign In Button */}
           {status === "unauthenticated" && (
             <Link
@@ -207,7 +208,7 @@ const NavBar = () => {
               onClick={() => setSignOut(true)}
               className="flex-1 text-center bg-pink-600 text-white font-semibold rounded-lg py-2 px-4 hover:bg-purple-700 transition-colors"
             >
-              {session.user?.name}
+              {user?.name || "U"}
             </button>
           )}
 
@@ -251,12 +252,19 @@ const NavBar = () => {
               Do you want to sign out?
             </h2>
             <div className="flex justify-center gap-4">
-              <Link
+              {/* <Link
                 href={"/api/auth/signout"}
                 className="bg-rose-100 text-rose-600 px-5 py-2 rounded-lg hover:bg-rose-200 transition-colors duration-200"
               >
                 Yes
-              </Link>
+              </Link> */}
+              <button
+                // href={"/api/auth/signout"}
+                onClick={logout}
+                className="bg-rose-100 text-rose-600 px-5 py-2 rounded-lg hover:bg-rose-200 transition-colors duration-200"
+              >
+                Yes
+              </button>
               <button
                 onClick={() => setSignOut(false)}
                 className="bg-gray-100 text-gray-700 px-5 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"

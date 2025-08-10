@@ -1,5 +1,6 @@
 "use client";
-import { loginWithGoogle } from "@/lib/auth";
+import { useAuth } from "@/context/AuthContext";
+import { loginUser, loginWithGoogle } from "@/lib/auth";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -30,6 +31,7 @@ type FormData = {
 
 const Login = () => {
   const router = useRouter();
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -40,16 +42,25 @@ const Login = () => {
   const onSubmit = async (data: FormData) => {
     console.log(data);
 
-    const res = await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-    });
+    // const res = await signIn("credentials", {
+    //   email: data.email,
+    //   password: data.password,
+    //   redirect: false,
+    // });
+    try {
+      const res = await loginUser(data.email, data.password);
 
-    if (res?.ok) {
-      router.push("/"); // or wherever you want
-    } else {
-      alert("Invalid credentials");
+      console.log("Hello: ", res);
+
+      login(res.userInfo, res.token);
+      if (res?.token) {
+        // success
+        router.push("/");
+      } else {
+        alert("Invalid credentials");
+      }
+    } catch (err) {
+      alert("Login failed. Please try again.");
     }
 
     reset();

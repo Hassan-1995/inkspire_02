@@ -1,15 +1,14 @@
 "use client";
 import { getUserContact } from "@/lib/auth";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LuDollarSign, LuMapPin, LuPhone, LuUser } from "react-icons/lu";
 import { useCheckoutStore } from "../store/checkoutStore";
 
 const ConfirmationPage = () => {
   const { amount } = useCheckoutStore();
-  const { status, data: session } = useSession();
-  const token = useMemo(() => session?.user?.accessToken, [session]);
+  const { user, token, status } = useAuth();
 
   const [address, setAddress] = useState("");
   const [contactNumber, setContactNumber] = useState("");
@@ -75,8 +74,8 @@ const ConfirmationPage = () => {
             <p className="text-sm font-medium text-gray-700">Name</p>
             {loading ? (
               <p className="text-gray-900 animate-pulse">Loading...</p>
-            ) : session?.user.name ? (
-              <p className="text-gray-900">{session.user.name}</p>
+            ) : user?.name ? (
+              <p className="text-gray-900">{user.name}</p>
             ) : (
               <p className="text-gray-500 italic">Not provided</p>
             )}

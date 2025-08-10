@@ -1,92 +1,82 @@
 "use client";
 // import { Session } from "next-auth";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { clearCart } from "../store/slices/cartSlice";
 
-type CartItem = {
-  productID: string;
-  productName: string;
-  productPrice: number;
-  productColor: string;
-  productSize: string;
-  quantity: number;
-  primaryImageSize?: string;
-  secondaryImageSize?: string;
-  productFrontPath?: string;
-  productBackPath?: string;
-};
+// type CartItem = {
+//   productID: string;
+//   productName: string;
+//   productPrice: number;
+//   productColor: string;
+//   productSize: string;
+//   quantity: number;
+//   primaryImageSize?: string;
+//   secondaryImageSize?: string;
+//   productFrontPath?: string;
+//   productBackPath?: string;
+// };
 
 const SuccessPaymentPage = () => {
-  const { status, data: session } = useSession();
-
+  
   const dispatch = useDispatch();
-  const hasRun = useRef(false);
-  const handleOrder = async () => {
-    try {
-      // ✅ 1️⃣ Fetch userId from your API route
-      const res = await fetch("/api/user");
-      if (!res.ok) {
-        throw new Error(`Failed to fetch user ID: ${res.statusText}`);
-      }
+  // const handleOrder = async () => {
+  //   try {
+  //     // ✅ 1️⃣ Fetch userId from your API route
+  //     const res = await fetch("/api/user");
+  //     if (!res.ok) {
+  //       throw new Error(`Failed to fetch user ID: ${res.statusText}`);
+  //     }
 
-      const data = await res.json();
-      const userId = data.userId;
+  //     const data = await res.json();
+  //     const userId = data.userId;
 
-      console.log("✅ Retrieved userId:", userId);
+  //     console.log("✅ Retrieved userId:", userId);
 
-      // ✅ 2️⃣ Use userId to prepare order data
-      const cartDataString = localStorage.getItem("cartData");
-      if (!cartDataString) {
-        console.error("No cart data found in localStorage.");
-        return;
-      }
+  //     // ✅ 2️⃣ Use userId to prepare order data
+  //     const cartDataString = localStorage.getItem("cartData");
+  //     if (!cartDataString) {
+  //       console.error("No cart data found in localStorage.");
+  //       return;
+  //     }
 
-      const cartItems: CartItem[] = JSON.parse(cartDataString);
+  //     const cartItems: CartItem[] = JSON.parse(cartDataString);
 
-      const formatedCartItems = cartItems.map((c, idx) => ({
-        ...c,
-        orderID: `${idx}_${userId}_${c.productName}`,
-        userID: userId, // ✅ using Prisma userId instead of email
-      }));
+  //     const formatedCartItems = cartItems.map((c, idx) => ({
+  //       ...c,
+  //       orderID: `${idx}_${userId}_${c.productName}`,
+  //       userID: userId, // ✅ using Prisma userId instead of email
+  //     }));
 
-      console.log("📦 Formatted Order Data: ", formatedCartItems);
+  //     console.log("📦 Formatted Order Data: ", formatedCartItems);
 
-      // ✅ 3️⃣ Post the formatted orders to your order API
-      const postRes = await fetch("/api/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formatedCartItems),
-      });
+  //     // ✅ 3️⃣ Post the formatted orders to your order API
+  //     const postRes = await fetch("/api/order", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(formatedCartItems),
+  //     });
 
-      if (!postRes.ok) {
-        throw new Error(`Error posting orders: ${postRes.statusText}`);
-      }
+  //     if (!postRes.ok) {
+  //       throw new Error(`Error posting orders: ${postRes.statusText}`);
+  //     }
 
-      const result = await postRes.json();
-      console.log("✅ Orders successfully posted:", result);
+  //     const result = await postRes.json();
+  //     console.log("✅ Orders successfully posted:", result);
 
-      // Optionally clear the cart
-      localStorage.removeItem("cartData");
-    } catch (error) {
-      console.error("❌ handleOrder error:", error);
-    }
-  };
+  //     // Optionally clear the cart
+  //     localStorage.removeItem("cartData");
+  //   } catch (error) {
+  //     console.error("❌ handleOrder error:", error);
+  //   }
+  // };
 
   useEffect(() => {
     localStorage.removeItem("cartData"); // Optional since clearCart also updates storage
     dispatch(clearCart());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (!hasRun.current && status === "authenticated" && session?.user) {
-      hasRun.current = true; // mark as run before calling to prevent race re-calls
-      handleOrder();
-    }
-  }, [status, session]);
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-indigo-50 via-orange-50 to-emerald-50 px-5">

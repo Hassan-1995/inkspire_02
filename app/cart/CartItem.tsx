@@ -10,7 +10,7 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import EmptyCart from "./EmptyCart";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
@@ -19,7 +19,7 @@ import { useCheckoutStore } from "../store/checkoutStore";
 
 const CartItem = () => {
   const dispatch = useDispatch();
-  const { status, data: session } = useSession();
+  const { token, status } = useAuth();
   const router = useRouter();
 
   const [warning, setWarning] = useState(false);
@@ -83,7 +83,7 @@ const CartItem = () => {
 
   const fetchUserAddress = async () => {
     try {
-      const token = session?.user.accessToken;
+      // const token = session?.user.accessToken;
       if (!token) {
         console.error("No access token found.");
         return false;

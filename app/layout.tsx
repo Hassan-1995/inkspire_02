@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "./NavBar";
 import AuthProvider from "./AuthProvide";
-// import AuthProvider from "./";
+import { AuthProviders } from "@/context/AuthContext";
+
 import Footer from "./Footer";
 import { StoreProvider } from "./store/StoreProvider";
 
@@ -32,18 +33,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <StoreProvider>
-            <nav className="fixed top-0 left-0 w-full z-50">
-              <NavBar />
-            </nav>
-            {/* {children} */}
-            <main className="mt-22">{children}</main>
-            <footer>
-              <Footer />
-            </footer>
-          </StoreProvider>
-        </AuthProvider>
+        <AuthProviders>
+          <AuthProvider>
+            <StoreProvider>
+              <nav className="fixed top-0 left-0 w-full z-50">
+                <NavBar />
+              </nav>
+              {/* {children} */}
+              <main className="mt-22">{children}</main>
+              <footer>
+                <Footer />
+              </footer>
+            </StoreProvider>
+          </AuthProvider>
+        </AuthProviders>
       </body>
     </html>
   );

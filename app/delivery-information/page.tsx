@@ -1,9 +1,9 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { getUserContact, updateUserContact } from "@/lib/auth";
 
 const formatContactNumber = (value: string) => {
@@ -14,10 +14,9 @@ const formatContactNumber = (value: string) => {
 };
 
 const DeliveryInformation = () => {
-  const { status, data: session } = useSession();
+  const { user, token, status } = useAuth();
   const router = useRouter();
 
-  const token = useMemo(() => session?.user?.accessToken, [session]);
   const [address, setAddress] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [loading, setLoading] = useState(false);
@@ -81,8 +80,6 @@ const DeliveryInformation = () => {
     }
   };
 
-  console.log("Session Delivery-infio: ", session);
-
   return (
     <div className="w-full min-h-screen pb-20">
       <section className="mb-2 text-white py-5 text-center">
@@ -110,7 +107,7 @@ const DeliveryInformation = () => {
               {status !== "authenticated" ? (
                 <p className="animate-pulse">Loading...</p>
               ) : (
-                <p>{session?.user?.name}</p>
+                <p>{user?.name}</p>
               )}
             </h2>
             <h2 className="text-gray-700 flex justify-between">
@@ -118,7 +115,7 @@ const DeliveryInformation = () => {
               {status !== "authenticated" ? (
                 <p className="animate-pulse">Loading...</p>
               ) : (
-                <p>{session?.user?.email}</p>
+                <p>{user?.email}</p>
               )}
             </h2>
 

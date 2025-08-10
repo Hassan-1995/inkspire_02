@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useCheckoutStore } from "../store/checkoutStore";
 import {
   createOrder,
@@ -10,14 +10,13 @@ import {
 } from "@/lib/auth";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
 const CheckoutPage = () => {
   // const totalAmount = Number(searchParams.amount) || 0;
   const { amount } = useCheckoutStore();
-  const { data: session } = useSession();
-  const token = useMemo(() => session?.user?.accessToken, [session]);
+  const { token, user } = useAuth();
   const [address, setAddress] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,8 +63,8 @@ const CheckoutPage = () => {
       deliveryDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000)
         .toISOString()
         .split("T")[0],
-      userID: Number(session?.user.id),
-      userEmail: session?.user.email,
+      userID: Number(user!.id),
+      userEmail: user!.email,
       userContact: contactNumber,
       userAddress: address,
     }));

@@ -41,6 +41,28 @@ export const registerUser = async (data: {
   return await api.post("/user", data);
 };
 
+
+export const loginUser= async (email: string, password: string)=> {
+  try {
+    const res = await api.post(`/user/login`, {
+      email,
+      password,
+    }, {
+      withCredentials: true, 
+    });
+
+    return res.data; 
+  } 
+  catch(error){
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error("Error checking user info:", error);
+    }
+  }
+};
+
+
 export const loginWithGoogle = async()=>{
     window.location.href = `http://localhost:5000/api/auth/google`;
 };

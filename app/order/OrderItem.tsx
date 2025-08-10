@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Header from "@/components/Header";
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import EmptyOrder from "./EmptyOrder";
 import { getOrdersByUserID } from "@/lib/auth"; // <- import the helper
@@ -27,11 +27,10 @@ interface OrderItemType {
 }
 
 const OrderItem = () => {
-  const { data: session, status } = useSession();
+  const { token, status } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState<OrderItemType[]>([]);
   const [loading, setLoading] = useState(true);
-  const token = session?.user.accessToken;
 
   // useEffect(() => {
   //   if (status === "authenticated") {
